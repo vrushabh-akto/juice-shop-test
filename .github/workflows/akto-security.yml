@@ -10,12 +10,23 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run CI/CD tests
-        uses: akto-api-security/run-scan@v1.0.16
-        with:
-          AKTO_DASHBOARD_URL: ${{vars.AKTO_DASHBOARD_URL}}
-          GITHUB_COMMIT_ID: ${{github.event.pull_request.head.sha}}
-          AKTO_API_KEY: ${{secrets.AKTO_API_KEY}}
-          AKTO_TEST_ID: ${{vars.AKTO_TEST_ID}}
-          WAIT_TIME_FOR_RESULT: 900
-          BLOCK_LEVEL: HIGH
+      - name: Run Akto CI/CD tests
+        env:
+          AKTO_DASHBOARD_URL: ${{ vars.AKTO_DASHBOARD_URL }}
+          AKTO_API_KEY: ${{ secrets.AKTO_API_KEY }}
+          AKTO_TEST_ID: ${{ vars.AKTO_TEST_ID }}
+          PR_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          docker run \
+            -e AKTO_DASHBOARD_URL="${AKTO_DASHBOARD_URL%/}" \
+            -e AKTO_API_KEY \
+            -e AKTO_TEST_ID \
+            -e GITHUB_SERVER_URL="${GITHUB_SERVER_URL}" \
+            -e GITHUB_REPOSITORY="${GITHUB_REPOSITORY}" \
+            -e GITHUB_REF_NAME="${GITHUB_REF_NAME}" \
+            -e GITHUB_REF="${GITHUB_REF}" \
+            -e GITHUB_SHA="${PR_SHA}" \
+            -e WAIT_TIME_FOR_RESULT=900 \
+            -e BLOCK_LEVEL=HIGH \
+            -e CICD_PLATFORM="Github Actions" \
+            aktosecurity/akto-testing-scan:latest
