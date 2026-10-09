@@ -11,9 +11,10 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Run CI/CD tests
-        uses: akto-api-security/run-scan@v1.0.3
+        uses: akto-api-security/run-scan@v1.0.16
         with:
           AKTO_DASHBOARD_URL: ${{vars.AKTO_DASHBOARD_URL}}
+          GITHUB_COMMIT_ID: ${{github.event.pull_request.head.sha}}
           AKTO_API_KEY: ${{secrets.AKTO_API_KEY}}
           AKTO_TEST_ID: ${{vars.AKTO_TEST_ID}}
           START_TIME_DELAY: 180
