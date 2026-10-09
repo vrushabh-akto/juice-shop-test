@@ -29,5 +29,5 @@ jobs:
             -e WAIT_TIME_FOR_RESULT=900 \
             -e BLOCK_LEVEL=HIGH \
             -e CICD_PLATFORM="Github Actions" \
-            -e AKTO_MINI_TESTING_SERVICE_NAME="mini-testing-1" \
+            -e AKTO_MINI_TESTING_SERVICE_NAME="akto-nginx-testing-module" \
             aktosecurity/akto-testing-scan:latest
